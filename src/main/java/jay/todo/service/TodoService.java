@@ -3,8 +3,6 @@ package jay.todo.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.QueryParam;
-
 import jay.todo.core.Item;
 import jay.todo.db.ItemDAO;
 import jay.todo.service.external.SMSService;
@@ -27,12 +25,12 @@ public class TodoService {
         this.smsService = smsService;
     }
     
-    public Item get(@QueryParam("id") String id) {
+    public Item get(String id) {
     	Item item = itemDAO.findById(id);
         return item;
     }
     
-    public boolean delete(@QueryParam("id") String id) {
+    public boolean delete(String id) {
     	boolean deleted = itemDAO.delete(id);
         return deleted;
     }
@@ -64,7 +62,7 @@ public class TodoService {
         return marked;
     }
     
-    public List<Item> search(@QueryParam("query") String query) {
+    public List<Item> search(String query) {
     	List<Item> items = null;
     	if (query != null && !query.isEmpty()) {
     		items = itemElasticsearchDAO.search(query);

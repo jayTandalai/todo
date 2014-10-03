@@ -51,6 +51,10 @@ public class Item {
         return done;
     }
 
+	public void set_id(String _id) {
+		this._id = _id;
+	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}

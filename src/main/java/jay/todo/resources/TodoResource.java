@@ -23,9 +23,8 @@ import com.codahale.metrics.annotation.Timed;
 
 @Path("/todo")
 @Produces(MediaType.APPLICATION_JSON)
-
 public class TodoResource {
-	
+
 	final static Logger logger = LoggerFactory.getLogger(TodoResource.class);
 
 	private TodoService todoService;
@@ -39,14 +38,18 @@ public class TodoResource {
 	@Path("/{id}")
 	public Response get(@PathParam("id") String id) {
 		Item item = todoService.get(id);
-		return Response.ok(item).build();
+		if (item != null) {
+			return Response.ok(item).build();
+		} else {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
 	}
 
 	@DELETE
 	@Timed
 	@Path("/{id}")
 	public Response delete(@PathParam("id") String id) {
-		if(id  == null || id.isEmpty()) {
+		if (id == null || id.isEmpty()) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 		boolean deleted = todoService.delete(id);
@@ -64,10 +67,10 @@ public class TodoResource {
 	 */
 	public Response save(Item item) {
 		String id = todoService.save(item);
-		if(id!=null || !id.isEmpty()) {
+		if (id != null || !id.isEmpty()) {
 			return Response.status(Response.Status.CREATED).entity(id).build();
 		} else {
-			return Response.noContent().build();
+			return Response.notAcceptable(null).build();
 		}
 	}
 
@@ -89,10 +92,8 @@ public class TodoResource {
 	@POST
 	@Timed
 	@Path("/{id}/{done}")
-	public Response mark(
-			@PathParam("id") String id,
-			@PathParam("done") Boolean done,
-			@QueryParam("smsTo") String smsTo) {
+	public Response mark(@PathParam("id") String id,
+			@PathParam("done") Boolean done, @QueryParam("smsTo") String smsTo) {
 		boolean result = todoService.mark(id, done, smsTo);
 		return Response.status(Response.Status.OK).entity(result).build();
 	}
